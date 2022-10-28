@@ -1,0 +1,34 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const classSchema = new Schema({
+  campus: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "campus",
+    required: true,
+    trim: true,
+  },
+  account: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "accounts",
+    required: true,
+    trim: true,
+  },
+  className: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  icon: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "icons",
+    required: true,
+    trim: true,
+  },
+  isHidden: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+module.exports = mongoose.model("classes", classSchema);
