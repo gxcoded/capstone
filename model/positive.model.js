@@ -52,6 +52,10 @@ const positiveSchema = new mongoose.Schema({
     trim: true,
     default: null,
   },
+  isStillValid: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 module.exports = mongoose.model("positives", positiveSchema);

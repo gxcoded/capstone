@@ -1,6 +1,10 @@
 const Positive = require("../model/positive.model");
+const Account = require("../model/account.model");
+const { appSMSServer } = require("../sms/sms.server");
 
 exports.notificationMessages = async (image, body) => {
+  const text = `Someone reported positive of COVID-19,please check your PSU contact tracer account!`;
+
   const newMessage = {
     campus: body.campus,
     accountOwner: body.accountOwner,
@@ -10,17 +14,35 @@ exports.notificationMessages = async (image, body) => {
     imgProof: image,
     message: body.message,
   };
+  const adminNumber = body.adminNumber;
+  const adminEmail = body.adminEmail;
+
+  console.log(adminNumber);
 
   const newPositive = new Positive(newMessage);
 
   await newPositive
     .save()
     .then(async (temp) => {
-      console.log("Sent");
+      appSMSServer(adminNumber, text);
+      if (await updateStatus(body.accountOwner)) {
+        console.log("Sent");
+      }
     })
     .catch((error) => {
       console.log(error);
     });
+};
+
+const updateStatus = async (id) => {
+  let updated = false;
+  await Account.updateOne({ _id: id }, { $set: { allowed: false } }).then(
+    (update) => {
+      updated = true;
+    }
+  );
+
+  return updated;
 };
 
 exports.getSentMessages = async (req, res, callback) => {

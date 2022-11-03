@@ -66,6 +66,21 @@ exports.getSubjects = async (req, res, callback) => {
   await callback();
 };
 
+exports.updateSubjectStatus = async (req, res, callback) => {
+  const _id = req.body.id;
+  const isOpen = req.body.isOpen;
+
+  await Subject.updateOne({ _id }, { $set: { isOpen: isOpen } })
+    .then((course) => {
+      req.body.updated = true;
+    })
+    .catch((err) => {
+      req.body.updated = false;
+    });
+
+  await callback();
+};
+
 exports.deleteSubject = async (req, res, callback) => {
   const id = req.body.id;
 

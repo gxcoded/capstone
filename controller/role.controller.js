@@ -27,3 +27,14 @@ exports.getRole = async (req, res, callback) => {
     });
   await callback();
 };
+
+exports.allRoles = async (req, res, callback) => {
+  await Role.find()
+    .then((result) => {
+      req.body.roleList = result;
+    })
+    .catch((error) => {
+      req.body.roleList = [];
+    });
+  await callback();
+};

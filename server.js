@@ -39,6 +39,7 @@ app.use("/static-data", require("./routers/staticRouter"));
 
 //working version
 app.use("/ct-api", require("./routes/main.route"));
+
 app.use(express.static("uploads"));
 app.use("/uploads", express.static("uploads"));
 

@@ -1,7 +1,10 @@
 require("dotenv").config();
-const sid = process.env.TWILIO_ACCOUNT_SID;
-const token = process.env.TWILIO_AUTH_TOKEN;
-const number = process.env.TWILIO_PHONE_NUMBER;
+// const sid = process.env.TWILIO_ACCOUNT_SID;
+// const token = process.env.TWILIO_AUTH_TOKEN;
+// const number = process.env.TWILIO_PHONE_NUMBER;
+const sid = `AC64675978a9bb6b2b9c0fceeec7fb0989`;
+const token = `9c4011e458facfa6c833aff5ed8b529a`;
+const number = `+14245887925`;
 
 const smsServer = require("twilio")(sid, token);
 
@@ -20,7 +23,7 @@ const appSMS = async (mobileNumber, text) => {
     })
     .then((result) => {
       console.log("message sent");
-      console.log(result);
+      // console.log(result);
       sent = true;
     })
     .catch((err) => {

@@ -68,6 +68,7 @@ const {
   checkUsername,
   resetPassword,
   finalizeVerification,
+  getAdminAccount,
 } = require("../controller/account.controller");
 const {
   getStaffAccounts,
@@ -107,7 +108,7 @@ const {
 } = require("../controller/office.controller");
 const { getGender } = require("../controller/gender.controller");
 const { getVaxStatus } = require("../controller/vaxStatus.controller");
-const { addRole, getRole } = require("../controller/role.controller");
+const { addRole, getRole, allRoles } = require("../controller/role.controller");
 const {
   getStudents,
   searchStudents,
@@ -204,6 +205,14 @@ router.post("/addSubject", Subjects.addSubject, (req, res) => {
 router.post("/getSubjects", Subjects.getSubjects, (req, res) => {
   res.status(200).send(req.body.subjects);
 });
+
+router.post(
+  "/updateSubjectStatus",
+  Subjects.updateSubjectStatus,
+  (req, res) => {
+    res.status(200).send(req.body.updated);
+  }
+);
 
 router.post("/deleteSubject", Subjects.deleteSubject, (req, res) => {
   res.status(200).send(req.body.deleted);
@@ -429,6 +438,10 @@ router.get("/getRole", getRole, (req, res) => {
   res.status(200).send(req.body.roleList);
 });
 
+router.get("/allRoles", allRoles, (req, res) => {
+  res.status(200).send(req.body.roleList);
+});
+
 //===========Gender Routes=================
 router.get("/getGender", getGender, (req, res) => {
   res.status(200).send(req.body.genderList);
@@ -466,6 +479,10 @@ router.post("/login", login, (req, res) => {
 });
 
 //================Account=======================
+
+router.post("/getAdminAccount", getAdminAccount, (req, res) => {
+  res.status(200).send(req.body.details);
+});
 
 router.post("/accountInfo", getSingleAccount, (req, res) => {
   res.status(200).send(req.body.details);

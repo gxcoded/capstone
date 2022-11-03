@@ -2,6 +2,8 @@ const sgMailer = require("@sendgrid/mail");
 require("dotenv").config();
 
 module.exports.appMailer = (emailAddress, url, type) => {
+  console.log("email Section");
+
   const API_KEY = process.env.SEND_GRID_API;
   sgMailer.setApiKey(API_KEY);
 
@@ -40,6 +42,8 @@ module.exports.appMailer = (emailAddress, url, type) => {
     .send(mailProperties)
     .then((okay) => {
       console.log("Email Sent");
+      console.log(mailProperties);
+      console.log(okay);
     })
     .catch((err) => {
       console.log(err.message);
