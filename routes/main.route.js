@@ -20,8 +20,10 @@ const Attendance = require("../controller/attendance.controller");
 const Message = require("../controller/message.controller");
 const ContactTracer = require("../controller/contactTracer.controller");
 const Positive = require("../controller/positive.controller");
+const Negative = require("../controller/negative.controller");
 const Assign = require("../controller/assignedRoom.controller");
 const PersonalLog = require("../controller/personalLog.controller");
+const Chat = require("../controller/chat.controller");
 
 const {
   addSemester,
@@ -69,6 +71,8 @@ const {
   resetPassword,
   finalizeVerification,
   getAdminAccount,
+  statusChecker,
+  getNurseInfo,
 } = require("../controller/account.controller");
 const {
   getStaffAccounts,
@@ -133,6 +137,10 @@ const {
   timeOut,
   getEntranceLogs,
 } = require("../controller/logs.controller");
+const Cases = require("../controller/cases.controller");
+const Coordinates = require("../controller/coordinates.contoller");
+const TestTypes = require("../controller/test-types.controller");
+
 const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt");
@@ -140,6 +148,37 @@ const bcrypt = require("bcrypt");
 const encrypt = async (id) => {
   return await bcrypt.hash(id, 10);
 };
+
+//===========Cases Routes=================
+router.post("/getAllCases", Cases.getCases, (req, res) => {
+  res.status(200).send(req.body.cases);
+});
+
+//===========Coordinates Routes=================
+router.post("/addCoordinate", Coordinates.addCoordinates, (req, res) => {
+  res.status(200).send(req.body.added);
+});
+router.post("/getCoordinates", Coordinates.getCoordinates, (req, res) => {
+  res.status(200).send(req.body.coordinates);
+});
+
+//===========ChatRoutes=================
+router.post("/addChat", Chat.addChat, (req, res) => {
+  res.status(200).send(req.body.added);
+});
+
+router.post("/getChat", Chat.getChat, (req, res) => {
+  res.status(200).send(req.body.thread);
+});
+
+//===========Test-Type Routes=================
+router.post("/addTestType", TestTypes.addTestType, (req, res) => {
+  res.status(200).send(req.body.added);
+});
+
+router.post("/getTestTypes", TestTypes.getTestTypes, (req, res) => {
+  res.status(200).send(req.body.testTypes);
+});
 
 //===========Campus Routes=================
 router.post("/addCampus", addCampus, (req, res) => {
@@ -309,7 +348,7 @@ router.post("/deleteOffice", deleteOffice, (req, res) => {
 
 //===========Room Routes=================
 router.post("/addRoom", addRoom, (req, res) => {
-  res.status(200).send(req.body.added);
+  res.status(200).send(true);
 });
 
 router.post("/roomList", getRooms, (req, res) => {
@@ -484,6 +523,15 @@ router.post("/getAdminAccount", getAdminAccount, (req, res) => {
   res.status(200).send(req.body.details);
 });
 
+router.post("/getNurseInfo", getNurseInfo, (req, res) => {
+  res.status(200).send(req.body.details);
+});
+
+router.post("/statusChecker", statusChecker, (req, res) => {
+  console.log(req.body.allowed);
+  res.status(200).send(req.body.allowed);
+});
+
 router.post("/accountInfo", getSingleAccount, (req, res) => {
   res.status(200).send(req.body.details);
 });
@@ -623,6 +671,10 @@ router.post("/allAttendance", Attendance.getAllAttendance, (req, res) => {
   res.status(200).send(req.body.all);
 });
 
+router.post("/addLog", addLog, (req, res) => {
+  res.status(200).send(req.body.added);
+});
+
 // router.post("/addAttendanceLog", addAttendanceLog, (req, res) => {
 //   res.status(200).send([]);
 // });
@@ -703,6 +755,22 @@ router.post("/reportPositive", upload.single("file"), async (req, res) => {
   res.status(200).send(true);
 });
 
+// router.post("/reportNegative", Negative.reportNegative, async (req, res) => {
+//   console.log(req.body);
+//   console.log(req.file);
+//   res.status(200).send([]);
+// });
+
+// ============Negative Reports==============
+router.post("/reportNegative", upload.single("file"), async (req, res) => {
+  const success = await Negative.reportNegative(req.file.filename, req.body);
+  res.status(200).send(success);
+});
+
+router.post("/getNegative", Negative.getReports, async (req, res) => {
+  res.status(200).send(req.body.report);
+});
+
 router.post("/getSentMessages", Positive.getSentMessages, (req, res) => {
   res.status(200).send(req.body.messages);
 });
@@ -717,6 +785,10 @@ router.post("/getAllNewMessages", Positive.getAllNewMessages, (req, res) => {
 
 router.post("/getAllMessages", Positive.getAllMessages, (req, res) => {
   res.status(200).send(req.body.messages);
+});
+
+router.post("/getValidProof", Positive.getValidProof, (req, res) => {
+  res.status(200).send(req.body.result);
 });
 
 router.post(

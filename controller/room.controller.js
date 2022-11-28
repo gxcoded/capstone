@@ -3,8 +3,10 @@ const Room = require("../model/rooms.model");
 exports.addRoom = async (req, res, next) => {
   const room = {
     campus: req.body.campus,
-    // building: req.body.building,
+    floor: req.body.floor,
     description: req.body.description,
+    lat: req.body.lat,
+    lng: req.body.lng,
   };
 
   const newRoom = new Room(room);
@@ -66,16 +68,23 @@ exports.searchRooms = async (req, res, callback) => {
 };
 
 exports.updateRoomDescription = async (req, res, callback) => {
-  const id = req.body.id;
+  const _id = req.body.id;
   const description = req.body.description;
+  const floor = req.body.floor;
+  const lat = req.body.lat;
+  const lng = req.body.lng;
 
-  await Room.updateOne({ _id: id }, { $set: { description: description } })
+  await Room.updateOne(
+    { _id },
+    { $set: { description: description, floor: floor, lat: lat, lng: lng } }
+  )
     .then((result) => {
       req.body.updated = true;
     })
     .catch((err) => {
       req.body.updated = false;
     });
+
   await callback();
 };
 

@@ -1,31 +1,65 @@
 const Positive = require("../model/positive.model");
 const Account = require("../model/account.model");
+const Case = require("../model/cases.model");
+const Restrict = require("../model/restricted.model");
 const { appSMSServer } = require("../sms/sms.server");
 
 exports.notificationMessages = async (image, body) => {
-  const text = `Someone reported positive of COVID-19,please check your PSU contact tracer account!`;
+  const text = `Someone reported positive of COVID-19, please check your PSU contact tracer account!`;
 
   const newMessage = {
     campus: body.campus,
     accountOwner: body.accountOwner,
     dateTested: body.dateTested,
+    testType: body.testType,
     dateSent: body.dateSent,
-    lastVisit: body.lastVisit,
+    resultDate: body.resultDate,
     imgProof: image,
     message: body.message,
   };
+
   const adminNumber = body.adminNumber;
   const adminEmail = body.adminEmail;
 
-  console.log(adminNumber);
+  console.log("admin" + adminNumber);
 
   const newPositive = new Positive(newMessage);
 
   await newPositive
     .save()
     .then(async (temp) => {
-      appSMSServer(adminNumber, text);
+      await appSMSServer(adminNumber, text);
+      const newCase = {
+        campus: temp.campus,
+        report: temp._id,
+      };
+
+      const anotherCase = new Case(newCase);
+
+      await anotherCase
+        .save()
+        .then(async (cs) => {
+          const restrict = {
+            caseId: cs._id,
+            account: body.accountOwner,
+          };
+
+          const newRestrict = new Restrict(restrict);
+
+          await newRestrict
+            .save()
+            .then((rs) => {
+              console.log("Restricted");
+            })
+            .catch((err) => {
+              console.log("restricted Error " + err);
+            });
+        })
+        .catch((err) => {
+          console.log("Case Error " + err);
+        });
       if (await updateStatus(body.accountOwner)) {
+        console.log(temp._id);
         console.log("Sent");
       }
     })
@@ -139,6 +173,32 @@ exports.setMessageReply = async (req, res, callback) => {
     })
     .catch((err) => {
       req.body.updated = false;
+    });
+
+  await callback();
+};
+
+exports.getValidProof = async (req, res, callback) => {
+  const days = `1209600000`;
+  const now = Date.now().toString();
+  console.log(now);
+  const total = Number(days) + Number(now);
+
+  console.log(total);
+
+  const accountOwner = req.body.accountOwner;
+
+  // const reply = req.body.reply;
+  // const replyDate = Date.now().toString();
+
+  await Positive.find({ accountOwner, dateSent: { $lt: total } })
+    .populate("testType")
+    .then((result) => {
+      console.log(result);
+      req.body.result = result;
+    })
+    .catch((err) => {
+      req.body.result = [];
     });
 
   await callback();

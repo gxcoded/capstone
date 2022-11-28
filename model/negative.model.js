@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-const positiveSchema = new mongoose.Schema({
-  campus: {
+const negativeSchema = new mongoose.Schema({
+  case: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: "campus",
+    ref: "positives",
     required: true,
     trim: true,
   },
@@ -41,7 +41,7 @@ const positiveSchema = new mongoose.Schema({
   },
   message: {
     type: String,
-    required: true,
+    default: "",
     trim: true,
   },
   seen: {
@@ -58,10 +58,6 @@ const positiveSchema = new mongoose.Schema({
     trim: true,
     default: null,
   },
-  isStillValid: {
-    type: Boolean,
-    default: true,
-  },
 });
 
-module.exports = mongoose.model("positives", positiveSchema);
+module.exports = mongoose.model("negatives", negativeSchema);

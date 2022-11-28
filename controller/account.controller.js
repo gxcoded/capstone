@@ -222,3 +222,33 @@ exports.updateAccountInfo = async (req, res, callback) => {
   }
   await callback();
 };
+
+exports.statusChecker = async (req, res, callback) => {
+  const _id = req.body.id;
+  req.body.allowed = false;
+
+  await Account.findOne({ _id, allowed: true })
+    .then((result) => {
+      console.log(result);
+      result !== null && (req.body.allowed = true);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  await callback();
+};
+// =========Nurse Information===================
+
+exports.getNurseInfo = async (req, res, callback) => {
+  const campus = req.body.campus;
+  const role = "637ef41babeb211183ca4824";
+
+  await Account.findOne({ campus, role }).then((result) => {
+    if (result !== null) {
+      req.body.details = result;
+    } else {
+      req.body.details = {};
+    }
+  });
+  await callback();
+};

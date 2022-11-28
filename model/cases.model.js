@@ -1,41 +1,34 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const roomSchema = new Schema({
+const caseSchema = new Schema({
   campus: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "campus",
     required: true,
     trim: true,
   },
-  floor: {
-    type: String,
+  report: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "positives",
     required: true,
     trim: true,
   },
-  description: {
+  dateTraced: {
     type: String,
-    required: true,
+    default: null,
     trim: true,
   },
-  lat: {
+  restrictStart: {
     type: String,
-    required: true,
+    default: null,
     trim: true,
   },
-  lng: {
+  restrictEnd: {
     type: String,
-    required: true,
+    default: null,
     trim: true,
-  },
-  isOpen: {
-    type: Boolean,
-    default: true,
-  },
-  allowStudentsAndGuests: {
-    type: Boolean,
-    default: false,
   },
 });
 
-module.exports = mongoose.model("rooms", roomSchema);
+module.exports = mongoose.model("cases", caseSchema);
