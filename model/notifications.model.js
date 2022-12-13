@@ -1,13 +1,8 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const chatSchema = new mongoose.Schema({
-  sender: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "accounts",
-    required: true,
-    trim: true,
-  },
-  receiver: {
+const notificationSchema = new Schema({
+  account: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "accounts",
     required: true,
@@ -29,4 +24,4 @@ const chatSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("chats", chatSchema);
+module.exports = mongoose.model("notifications", notificationSchema);

@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const negativeSchema = new mongoose.Schema({
-  case: {
+  campus: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: "positives",
+    ref: "campus",
     required: true,
     trim: true,
   },

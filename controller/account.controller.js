@@ -237,6 +237,33 @@ exports.statusChecker = async (req, res, callback) => {
     });
   await callback();
 };
+
+// status update on Trace All UI
+exports.statusUpdater = async (req, res, callback) => {
+  req.body.updated = false;
+
+  const _id = req.body.id;
+  await Account.findOne({ _id })
+    .then(async (result) => {
+      if (result !== null) {
+        await Account.updateOne(
+          { _id: result._id },
+          { $set: { allowed: !result.allowed } }
+        )
+          .then((updated) => {
+            req.body.updated = true;
+          })
+          .catch((err) => {
+            console.log("update Error");
+          });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  await callback();
+};
 // =========Nurse Information===================
 
 exports.getNurseInfo = async (req, res, callback) => {

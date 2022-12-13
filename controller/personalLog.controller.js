@@ -1,5 +1,6 @@
 const PersonalLog = require("../model/personalLog.model");
 const Room = require("../model/rooms.model");
+const Logs = require("../model/logs.model");
 
 const roleChecker = (role) => {
   switch (role) {
@@ -166,4 +167,68 @@ exports.logger = async (req, res, callback) => {
     req.body.response = { success: false, timeIn: false };
   }
   await callback();
+};
+
+exports.getLastLog = async (req, res, callback) => {
+  const id = req.body.id;
+  const ll = await lastLog(id);
+  const pl = await lastPersonalLog(id);
+
+  if (Number(ll) > pl) {
+    req.body.lastLog = ll;
+  } else {
+    req.body.lastLog = pl;
+  }
+
+  await callback();
+};
+
+exports.lastLogTester = async (req, res, callback) => {
+  const id = req.body.id;
+  const ll = await lastLog(id);
+  const pl = await lastPersonalLog(id);
+
+  console.log(dateFormatter(ll));
+  console.log(dateFormatter(pl));
+
+  await callback();
+};
+
+const lastPersonalLog = async (id) => {
+  let last = Date.now().toString();
+
+  await PersonalLog.findOne({ accountOwner: id })
+    .sort({ date: -1 })
+    .then((result) => {
+      if (result !== null) {
+        last = result.date;
+      }
+    })
+    .catch((err) => {});
+  return last;
+};
+
+const lastLog = async (id) => {
+  let last = Date.now().toString();
+  await Logs.findOne({ accountScanned: id })
+    .sort({ date: -1 })
+    .then((result) => {
+      if (result !== null) {
+        last = result.date;
+      }
+    })
+    .catch((err) => {});
+
+  return last;
+};
+
+const dateFormatter = (timeString) => {
+  const date = new Date(Number(timeString)).toString().slice(4, 15);
+  const time = new Date(Number(timeString)).toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+
+  return `${date}`;
 };

@@ -37,3 +37,16 @@ exports.getChat = async (req, res, callback) => {
     });
   await callback();
 };
+
+exports.newChatCounter = async (req, res, callback) => {
+  const receiver = req.body.account;
+
+  await Chat.find({ receiver, seen: false })
+    .then((result) => {
+      req.body.count = `${result.length}`;
+    })
+    .catch((err) => {
+      req.body.count = "0";
+    });
+  await callback();
+};

@@ -24,6 +24,7 @@ const Negative = require("../controller/negative.controller");
 const Assign = require("../controller/assignedRoom.controller");
 const PersonalLog = require("../controller/personalLog.controller");
 const Chat = require("../controller/chat.controller");
+const Excuse = require("../controller/excuse.controller");
 
 const {
   addSemester,
@@ -73,6 +74,7 @@ const {
   getAdminAccount,
   statusChecker,
   getNurseInfo,
+  statusUpdater,
 } = require("../controller/account.controller");
 const {
   getStaffAccounts,
@@ -138,8 +140,9 @@ const {
   getEntranceLogs,
 } = require("../controller/logs.controller");
 const Cases = require("../controller/cases.controller");
-const Coordinates = require("../controller/coordinates.contoller");
+const Coordinates = require("../controller/coordinates.controller");
 const TestTypes = require("../controller/test-types.controller");
+const Notification = require("../controller/notifications.controller");
 
 const multer = require("multer");
 const path = require("path");
@@ -149,9 +152,57 @@ const encrypt = async (id) => {
   return await bcrypt.hash(id, 10);
 };
 
+// ============Excuse=====================
+
+router.post("/addExcuse", Excuse.addExcuse, (req, res) => {
+  res.status(200).send(req.body.saved);
+});
+
+router.post("/removeExcuse", Excuse.removeExcuse, (req, res) => {
+  res.status(200).send(req.body.removed);
+});
+
+router.post("/getExcusedStudents", Excuse.getExcusedStudents, (req, res) => {
+  res.status(200).send(req.body.result);
+});
+
+// ============Notifications=====================
+
+router.post("/sendNotification", Notification.sendNotification, (req, res) => {
+  res.status(200).send(true);
+});
+
+router.post(
+  "/updateNotificationStatus",
+  Notification.updateNotificationStatus,
+  (req, res) => {
+    res.status(200).send(req.body.updated);
+  }
+);
+
+router.post(
+  "/getMyNotifications",
+  Notification.getMyNotifications,
+  (req, res) => {
+    res.status(200).send(req.body.notifications);
+  }
+);
+
 //===========Cases Routes=================
 router.post("/getAllCases", Cases.getCases, (req, res) => {
   res.status(200).send(req.body.cases);
+});
+
+router.post("/checkUntracedCase", Cases.checkUntracedCase, (req, res) => {
+  res.status(200).send(req.body.traced);
+});
+
+router.post("/getAllUntracedCase", Cases.getAllUntracedCase, (req, res) => {
+  res.status(200).send(req.body.cases);
+});
+
+router.post("/caseUpdater", Cases.caseUpdater, (req, res) => {
+  res.status(200).send(req.body.updated);
 });
 
 //===========Coordinates Routes=================
@@ -169,6 +220,10 @@ router.post("/addChat", Chat.addChat, (req, res) => {
 
 router.post("/getChat", Chat.getChat, (req, res) => {
   res.status(200).send(req.body.thread);
+});
+
+router.post("/newChatCounter", Chat.newChatCounter, (req, res) => {
+  res.status(200).send(req.body.count);
 });
 
 //===========Test-Type Routes=================
@@ -430,6 +485,14 @@ router.post(
     res.send(req.body.result);
   }
 );
+
+router.post(
+  "/wideRangeInteractions",
+  ContactTracer.wideRangeInteractions,
+  (req, res) => {
+    res.send(req.body.result);
+  }
+);
 //===========Meeting Routes=================
 router.post("/addMeeting", Meeting.addMeeting, (req, res) => {
   res.status(200).send(req.body.created);
@@ -521,6 +584,11 @@ router.post("/login", login, (req, res) => {
 
 router.post("/getAdminAccount", getAdminAccount, (req, res) => {
   res.status(200).send(req.body.details);
+});
+
+// trace all Updater
+router.post("/statusUpdater", statusUpdater, (req, res) => {
+  res.status(200).send(req.body.updated);
 });
 
 router.post("/getNurseInfo", getNurseInfo, (req, res) => {
@@ -661,6 +729,15 @@ router.post("/personalLog", PersonalLog.logger, (req, res) => {
   res.status(200).send(req.body.response);
 });
 
+router.post("/getLastLog", PersonalLog.getLastLog, (req, res) => {
+  console.log(req.body.lastLog);
+  res.status(200).send(req.body.lastLog);
+});
+
+router.post("/testLogs", PersonalLog.lastLogTester, (req, res) => {
+  res.status(200).send([]);
+});
+
 // ===============Scanner Logs===========================
 
 router.post("/getAttendanceLog", Attendance.getAttendanceLog, (req, res) => {
@@ -771,6 +848,27 @@ router.post("/getNegative", Negative.getReports, async (req, res) => {
   res.status(200).send(req.body.report);
 });
 
+router.post("/getProofDetails", Negative.getProofDetails, async (req, res) => {
+  res.status(200).send(req.body.result);
+});
+
+router.post(
+  "/updateReportStatus",
+  Negative.updateReportStatus,
+  async (req, res) => {
+    res.status(200).send(req.body.updated);
+  }
+);
+
+router.post(
+  "/getAllNegativeReports",
+  Negative.getAllNegativeReports,
+  async (req, res) => {
+    res.status(200).send(req.body.report);
+  }
+);
+
+// ============Positive Reports===========================
 router.post("/getSentMessages", Positive.getSentMessages, (req, res) => {
   res.status(200).send(req.body.messages);
 });

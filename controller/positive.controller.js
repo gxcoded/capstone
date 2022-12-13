@@ -179,22 +179,22 @@ exports.setMessageReply = async (req, res, callback) => {
 };
 
 exports.getValidProof = async (req, res, callback) => {
-  const days = `1209600000`;
-  const now = Date.now().toString();
-  console.log(now);
-  const total = Number(days) + Number(now);
+  // const days = `1209600000`;
+  // const now = Date.now().toString();
+  // console.log(now);
+  // const total = Number(days) + Number(now);
 
-  console.log(total);
+  // console.log(total);
 
-  const accountOwner = req.body.accountOwner;
+  const _id = req.body.id;
 
   // const reply = req.body.reply;
   // const replyDate = Date.now().toString();
 
-  await Positive.find({ accountOwner, dateSent: { $lt: total } })
+  await Positive.find({ _id })
+    .sort({ dateSent: -1 })
     .populate("testType")
     .then((result) => {
-      console.log(result);
       req.body.result = result;
     })
     .catch((err) => {
