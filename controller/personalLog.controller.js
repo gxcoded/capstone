@@ -4,18 +4,23 @@ const Logs = require("../model/logs.model");
 
 const roleChecker = (role) => {
   switch (role) {
+    //admin
     case "62cb91b12c5804049b716d47":
       return 1;
       break;
+    //Teaching
     case "62cb8add107251b0d1d0b641":
       return 2;
       break;
+    //Non Teaching
     case "62cb8ae9107251b0d1d0b643":
       return 3;
       break;
+    //Student
     case "62cb91ba2c5804049b716d49":
       return 4;
       break;
+    // Guest
     case "62cb91c52c5804049b716d4b":
       return 5;
     default:
@@ -27,6 +32,7 @@ const accessChecker = async (_id) => {
   let obj = {
     allowed: false,
     location: "Unknown",
+    isRoom: false,
   };
 
   await Room.find({ _id })
@@ -36,6 +42,7 @@ const accessChecker = async (_id) => {
         // console.log(result[0].allowStudentsAndGuests);
         obj.allowed = result[0].allowStudentsAndGuests;
         obj.location = result[0].description;
+        obj.isRoom = true;
       }
     })
     .catch((err) => {
@@ -142,24 +149,33 @@ exports.logger = async (req, res, callback) => {
     } else {
       const allowed = await accessChecker(_id);
 
-      const timeOut = await isTimeOut(req.body.accountOwner, _id);
-      if (timeOut !== null) {
-        console.log("true1");
-        const updated = await assignTimeOut(timeOut);
+      if (allowed.isRoom) {
+        const timeOut = await isTimeOut(req.body.accountOwner, _id);
+        if (timeOut !== null) {
+          console.log("true1");
+          const updated = await assignTimeOut(timeOut);
+          req.body.response = {
+            success: updated,
+            timeIn: false,
+            location: allowed.location,
+          };
+        } else {
+          console.log("else1");
+          const success = await setTimeIn(req.body);
+          console.log(success);
+          req.body.response = {
+            success: success,
+            timeIn: true,
+            location: allowed.location,
+          };
+        }
+      } else {
         req.body.response = {
-          success: updated,
+          success: false,
           timeIn: false,
           location: allowed.location,
         };
-      } else {
-        console.log("else1");
-        const success = await setTimeIn(req.body);
-        console.log(success);
-        req.body.response = {
-          success: success,
-          timeIn: true,
-          location: allowed.location,
-        };
+        console.log("Not Allowed");
       }
     }
   } else {
