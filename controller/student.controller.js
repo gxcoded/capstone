@@ -46,7 +46,7 @@ exports.searchStudents = async (req, res, callback) => {
 exports.searchClassStudents = async (req, res, callback) => {
   const role = "62cb91ba2c5804049b716d49";
   const campus = req.body.campus;
-  const course = req.body.course;
+  // const course = req.body.course;
 
   await Account.find({
     $or: [
@@ -55,7 +55,7 @@ exports.searchClassStudents = async (req, res, callback) => {
     ],
     campus: campus,
     role: role,
-    course,
+    // course,
   })
     .sort({ course: 1, lastName: 1 })
     .populate("course")

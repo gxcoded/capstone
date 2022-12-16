@@ -36,6 +36,10 @@ const roomSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isClassRoom: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("rooms", roomSchema);

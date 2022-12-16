@@ -26,9 +26,9 @@ exports.getSingleAccount = async (req, res, callback) => {
   await callback();
 };
 
-exports.getAdminAccount = async (req, res, callback) => {
+exports.getNurseAccount = async (req, res, callback) => {
   const campus = req.body.campus;
-  const role = `62cb91b12c5804049b716d47`;
+  const role = `637ef41babeb211183ca4824`;
 
   await Account.findOne({ campus, role }).then((result) => {
     if (result !== null) {

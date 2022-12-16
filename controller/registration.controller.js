@@ -47,7 +47,7 @@ exports.temp = async (image, body, tempId) => {
   let hashKey = "";
 
   appMailer(email, code, 2);
-  appSMSServer(body.phoneNumber, textMessage);
+  // appSMSServer(body.phoneNumber, textMessage);
 
   let tempAccount = {};
   if (role === "62cb91ba2c5804049b716d49") {

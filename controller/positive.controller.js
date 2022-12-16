@@ -3,9 +3,11 @@ const Account = require("../model/account.model");
 const Case = require("../model/cases.model");
 const Restrict = require("../model/restricted.model");
 const { appSMSServer } = require("../sms/sms.server");
+const { notificationServer } = require("./notifications.controller");
 
 exports.notificationMessages = async (image, body) => {
   const text = `Someone reported positive of COVID-19, please check your PSU contact tracer account!`;
+  const msg = `There is a new Reported Case of COVID-19`;
 
   const newMessage = {
     campus: body.campus,
@@ -20,6 +22,7 @@ exports.notificationMessages = async (image, body) => {
 
   const adminNumber = body.adminNumber;
   const adminEmail = body.adminEmail;
+  const accountId = body.accountId;
 
   console.log("admin" + adminNumber);
 
@@ -29,6 +32,7 @@ exports.notificationMessages = async (image, body) => {
     .save()
     .then(async (temp) => {
       await appSMSServer(adminNumber, text);
+      await notificationServer(accountId, msg);
       const newCase = {
         campus: temp.campus,
         report: temp._id,

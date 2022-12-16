@@ -55,3 +55,30 @@ exports.updateNotificationStatus = async (req, res, callback) => {
 
   await callback();
 };
+
+module.exports.notificationServer = async (accountId, message) => {
+  return await notify(accountId, message);
+};
+
+const notify = async (accountId, message) => {
+  let success = false;
+
+  const notification = {
+    account: accountId,
+    text: message,
+    dateSent: Date.now().toString(),
+  };
+
+  const newNotification = new Notification(notification);
+
+  await newNotification
+    .save()
+    .then((okay) => {
+      success = true;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  return success;
+};

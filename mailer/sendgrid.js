@@ -1,5 +1,4 @@
 const sgMailer = require("@sendgrid/mail");
-const { emailSender } = require("./sendinblue");
 require("dotenv").config();
 
 module.exports.appMailer = (emailAddress, url, type) => {
@@ -32,25 +31,23 @@ module.exports.appMailer = (emailAddress, url, type) => {
   //   },
   // });
 
-  emailSender(emailAddress, subject, message);
+  const mailProperties = {
+    from: "psumailer@gmail.com",
+    to: `${emailAddress}`,
+    subject: subject,
+    html: message,
+  };
 
-  // const mailProperties = {
-  //   from: "psumailer@gmail.com",
-  //   to: `${emailAddress}`,
-  //   subject: subject,
-  //   html: message,
-  // };
-
-  // sgMailer
-  //   .send(mailProperties)
-  //   .then((okay) => {
-  //     console.log("Email Sent");
-  //     console.log(mailProperties);
-  //     console.log(okay);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err.message);
-  //   });
+  sgMailer
+    .send(mailProperties)
+    .then((okay) => {
+      console.log("Email Sent");
+      console.log(mailProperties);
+      console.log(okay);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 
   // mailer.sendMail(mailProperties, (err, info) => {
   //   if (err) {

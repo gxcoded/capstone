@@ -11,7 +11,6 @@ const roleChecker = (role) => {
       return 2;
       break;
     case "62cb8ae9107251b0d1d0b643":
-      f;
       return 3;
       break;
     case "62cb91ba2c5804049b716d49":

@@ -2,6 +2,7 @@ const Excuse = require("../model/excuse.model");
 
 exports.addExcuse = async (req, res, callback) => {
   const excuse = {
+    classRoom: req.body.currentRoomId,
     meeting: req.body.meeting,
     student: req.body.student,
     remarks: req.body.remarks,
@@ -38,10 +39,10 @@ exports.removeExcuse = async (req, res, callback) => {
 };
 
 exports.getExcusedStudents = async (req, res, callback) => {
-  const meeting = req.body.meeting;
+  const classRoom = req.body.classRoomId;
 
-  await Excuse.find({ meeting })
-    .populate("student")
+  await Excuse.find({ classRoom })
+    // .populate("student")
     .sort({ _id: -1 })
     .then((result) => {
       req.body.result = result;

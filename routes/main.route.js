@@ -71,7 +71,7 @@ const {
   checkUsername,
   resetPassword,
   finalizeVerification,
-  getAdminAccount,
+  getNurseAccount,
   statusChecker,
   getNurseInfo,
   statusUpdater,
@@ -87,6 +87,7 @@ const { walkIns } = require("../controller/walkin.controller");
 const {
   addRoom,
   getRooms,
+  getClassRooms,
   searchRooms,
   updateRoomScanControl,
   updateRoomStatus,
@@ -410,6 +411,10 @@ router.post("/roomList", getRooms, (req, res) => {
   res.status(200).send(req.body.rooms);
 });
 
+router.post("/classRoomList", getClassRooms, (req, res) => {
+  res.status(200).send(req.body.rooms);
+});
+
 router.post("/searchRoom", searchRooms, (req, res) => {
   res.status(200).send(req.body.rooms);
 });
@@ -582,7 +587,7 @@ router.post("/login", login, (req, res) => {
 
 //================Account=======================
 
-router.post("/getAdminAccount", getAdminAccount, (req, res) => {
+router.post("/getNurseAccount", getNurseAccount, (req, res) => {
   res.status(200).send(req.body.details);
 });
 

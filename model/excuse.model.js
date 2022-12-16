@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 
 const excuseSchema = new mongoose.Schema({
+  classRoom: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "classRooms",
+    required: true,
+    trim: true,
+  },
   meeting: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "meetings",

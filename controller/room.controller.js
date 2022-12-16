@@ -39,6 +39,22 @@ exports.getRooms = async (req, res, callback) => {
   await callback();
 };
 
+exports.getClassRooms = async (req, res, callback) => {
+  const campus = req.body.campus;
+
+  await Room.find({ campus, isClassRoom: true })
+    // .populate("building")
+    .sort({ description: 1 })
+    .then((rooms) => {
+      req.body.rooms = rooms;
+    })
+    .catch((err) => {
+      req.body.rooms = [];
+    });
+
+  await callback();
+};
+
 exports.searchRooms = async (req, res, callback) => {
   const campus = req.body.campus;
   const key = req.body.key;
