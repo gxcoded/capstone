@@ -1,13 +1,13 @@
-const VaxStatus = require('../model/vaxStatus.model')
+const VaxStatus = require("../model/vaxStatus.model");
 
-
-exports.getVaxStatus = async (req,res,callback)=>{
-
-    await VaxStatus.find().sort({description: 1}).then(result=>{
-           
-            req.body.statusList = result;
-    }).catch(error=>{
-        req.body.statusList = [];
+exports.getVaxStatus = async (req, res, callback) => {
+  await VaxStatus.find()
+    .sort({ description: 1 })
+    .then((result) => {
+      req.body.statusList = result;
     })
-    await callback()
-}
+    .catch((error) => {
+      req.body.statusList = [];
+    });
+  await callback();
+};

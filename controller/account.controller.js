@@ -279,3 +279,45 @@ exports.getNurseInfo = async (req, res, callback) => {
   });
   await callback();
 };
+
+exports.updateProfilePic = async (image, body) => {
+  let updated = false;
+
+  const _id = body.id;
+
+  await Account.updateOne({ _id }, { $set: { image: image } })
+    .then((res) => {
+      updated = true;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  return updated;
+};
+
+exports.updateStaticInfo = async (req, res, callback) => {
+  const firstName = req.body.firstName;
+  const _id = req.body.id;
+  const lastName = req.body.lastName;
+  const phoneNumber = req.body.number;
+
+  await Account.updateOne(
+    { _id },
+    {
+      $set: {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+      },
+    }
+  )
+    .then((res) => {
+      req.body.updated = true;
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.updated = false;
+    });
+  await callback();
+};

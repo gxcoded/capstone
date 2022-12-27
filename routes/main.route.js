@@ -75,6 +75,8 @@ const {
   statusChecker,
   getNurseInfo,
   statusUpdater,
+  updateProfilePic,
+  updateStaticInfo,
 } = require("../controller/account.controller");
 const {
   getStaffAccounts,
@@ -587,6 +589,9 @@ router.post("/login", login, (req, res) => {
 
 //================Account=======================
 
+router.post("/updateStaticInfo", updateStaticInfo, (req, res) => {
+  res.status(200).send(req.body.updated);
+});
 router.post("/getNurseAccount", getNurseAccount, (req, res) => {
   res.status(200).send(req.body.details);
 });
@@ -830,6 +835,11 @@ router.post("/staffRegister", upload.single("file"), async (req, res) => {
 router.post("/walkInReg", upload.single("file"), async (req, res) => {
   walkInReg(req.file.filename, req.body);
   res.status(200).send(true);
+});
+
+router.post("/updateProfilePic", upload.single("file"), async (req, res) => {
+  const updated = updateProfilePic(req.file.filename, req.body);
+  res.status(200).send(updated);
 });
 
 router.post("/reportPositive", upload.single("file"), async (req, res) => {
