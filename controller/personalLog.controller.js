@@ -110,6 +110,29 @@ const assignTimeOut = async (_id) => {
   return updated;
 };
 
+//tracker
+exports.lastRoomScan = async (req, res, callback) => {
+  const id = req.body.id;
+
+  await PersonalLog.findOne({ accountOwner: id })
+    .populate("accountOwner")
+    .populate("locationId")
+    .sort({ date: -1 })
+    .then((log) => {
+      if (log !== null) {
+        // console.log(log);
+        req.body.location = log;
+      } else {
+        req.body.location = {};
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.location = {};
+    });
+  await callback();
+};
+
 exports.logger = async (req, res, callback) => {
   const role = roleChecker(req.body.role);
   const _id = req.body.key.text;
@@ -182,6 +205,34 @@ exports.logger = async (req, res, callback) => {
     req.body.response = { success: false, timeIn: false };
   }
   await callback();
+};
+
+const logLastOut = async (id) => {
+  await Logs.findOneAndUpdate(
+    { accountScanned: id, end: null },
+    {
+      $set: { end: now },
+    }
+  )
+    .then((okay) => {
+      console.log("okay");
+    })
+    .catch((err) => {
+      console.log("cant update");
+    });
+
+  await PersonalLog.findOneAndUpdate(
+    { accountOwner: id, end: null },
+    {
+      $set: { end: now },
+    }
+  )
+    .then((okay) => {
+      console.log("okay");
+    })
+    .catch((err) => {
+      console.log("cant update");
+    });
 };
 
 exports.getLastLog = async (req, res, callback) => {

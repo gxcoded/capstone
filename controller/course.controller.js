@@ -49,3 +49,17 @@ exports.updateCourseStatus = async (req, res, callback) => {
 
   await callback();
 };
+
+exports.updateCourse = async (req, res, callback) => {
+  const id = req.body.id;
+  const description = req.body.description;
+
+  await Course.updateOne({ _id: id }, { $set: { description: description } })
+    .then((result) => {
+      req.body.updated = true;
+    })
+    .catch((err) => {
+      req.body.updated = false;
+    });
+  await callback();
+};

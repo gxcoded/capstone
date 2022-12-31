@@ -1,4 +1,5 @@
 const Log = require("../model/logs.model");
+const PersonalLog = require("../model/personalLog.model");
 
 exports.addLog = async (req, res, callback) => {
   const now = Date.now().toString();
@@ -15,6 +16,32 @@ exports.addLog = async (req, res, callback) => {
       minutes: 0,
     },
   };
+
+  await Log.findOneAndUpdate(
+    { accountScanned: log.accountScanned, end: null },
+    {
+      $set: { end: now },
+    }
+  )
+    .then((okay) => {
+      console.log("okay");
+    })
+    .catch((err) => {
+      console.log("cant update");
+    });
+
+  await PersonalLog.findOneAndUpdate(
+    { accountOwner: log.accountScanned, end: null },
+    {
+      $set: { end: now },
+    }
+  )
+    .then((okay) => {
+      console.log("okay");
+    })
+    .catch((err) => {
+      console.log("cant update");
+    });
 
   const newLog = new Log(log);
 

@@ -9,6 +9,7 @@ const {
   addCourse,
   getCourse,
   updateCourseStatus,
+  updateCourse,
 } = require("../controller/course.controller");
 
 const Subjects = require("../controller/subject.controller");
@@ -165,6 +166,10 @@ router.post("/removeExcuse", Excuse.removeExcuse, (req, res) => {
   res.status(200).send(req.body.removed);
 });
 
+router.post("/getMeetingExcused", Excuse.getMeetingExcused, (req, res) => {
+  res.status(200).send(req.body.result);
+});
+
 router.post("/getExcusedStudents", Excuse.getExcusedStudents, (req, res) => {
   res.status(200).send(req.body.result);
 });
@@ -261,6 +266,10 @@ router.post("/courseList", getCourse, (req, res) => {
 });
 
 router.post("/updateCourseStatus", updateCourseStatus, (req, res) => {
+  res.status(200).send(req.body.updated);
+});
+
+router.post("/updateCourse", updateCourse, (req, res) => {
   res.status(200).send(req.body.updated);
 });
 
@@ -783,6 +792,10 @@ router.post("/updateLog", updateLog, (req, res) => {
 });
 
 router.post("/staffTracker", tracker, (req, res) => {
+  res.status(200).send(req.body.location);
+});
+
+router.post("/lastPersonalLog", PersonalLog.lastRoomScan, (req, res) => {
   res.status(200).send(req.body.location);
 });
 // ===============Test=========================

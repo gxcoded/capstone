@@ -38,6 +38,24 @@ exports.removeExcuse = async (req, res, callback) => {
   await callback();
 };
 
+exports.getMeetingExcused = async (req, res, callback) => {
+  const meeting = req.body.meeting;
+
+  await Excuse.find({ meeting })
+    .populate("student")
+    .sort({ _id: -1 })
+    .then((result) => {
+      req.body.result = result;
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.result = [];
+    });
+
+  await callback();
+};
+
+// this is for the attendance monitoring part
 exports.getExcusedStudents = async (req, res, callback) => {
   const classRoom = req.body.classRoomId;
 
