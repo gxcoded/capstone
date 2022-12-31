@@ -2,7 +2,7 @@ const sgMailer = require("@sendgrid/mail");
 const { emailSender } = require("./sendinblue");
 require("dotenv").config();
 
-module.exports.appMailer = (emailAddress, url, type) => {
+module.exports.appMailer = async (emailAddress, url, type) => {
   console.log("email Section");
 
   const API_KEY = process.env.SEND_GRID_API;
@@ -32,7 +32,7 @@ module.exports.appMailer = (emailAddress, url, type) => {
   //   },
   // });
 
-  emailSender(emailAddress, subject, message);
+  const sent = await emailSender(emailAddress, subject, message);
 
   // const mailProperties = {
   //   from: "psumailer@gmail.com",
@@ -59,4 +59,5 @@ module.exports.appMailer = (emailAddress, url, type) => {
   //     console.log("Email Sent!: " + info);
   //   }
   // });
+  return sent;
 };

@@ -712,7 +712,7 @@ router.post("/getNonTeachingAccounts", getNonTeachingAccounts, (req, res) => {
 // ==============Email Routes======================
 
 router.post("/sendLink", sendEmail, (req, res) => {
-  res.status(200).send(req.body.sent);
+  res.status(200).send(req.body.emailSent);
 });
 
 router.post("/getLink", getLink, (req, res) => {
