@@ -29,7 +29,7 @@ exports.sendEmail = async (req, res, callback) => {
     url = `${URLBase}/student-sign-up?campus=${campus}&hash=${hash}`;
   }
 
-  req.body.emailSent = appMailer(email, url, 1);
+  req.body.emailSent = await appMailer(email, url, 1);
 
   const newEmail = new Email(emailProps);
 

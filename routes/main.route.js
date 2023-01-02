@@ -201,11 +201,23 @@ router.post("/getAllCases", Cases.getCases, (req, res) => {
   res.status(200).send(req.body.cases);
 });
 
+router.post("/checkNotified", Cases.checkNotified, (req, res) => {
+  res.status(200).send(req.body.result);
+});
+
+router.post("/setAsNotified", Cases.setAsNotified, (req, res) => {
+  res.status(200).send(req.body.updated);
+});
+
 router.post("/checkUntracedCase", Cases.checkUntracedCase, (req, res) => {
   res.status(200).send(req.body.traced);
 });
 
 router.post("/getAllUntracedCase", Cases.getAllUntracedCase, (req, res) => {
+  res.status(200).send(req.body.cases);
+});
+
+router.post("/getAllUnseenCase", Cases.getAllUnseenCase, (req, res) => {
   res.status(200).send(req.body.cases);
 });
 
@@ -712,6 +724,7 @@ router.post("/getNonTeachingAccounts", getNonTeachingAccounts, (req, res) => {
 // ==============Email Routes======================
 
 router.post("/sendLink", sendEmail, (req, res) => {
+  console.log(req.body.emailSent);
   res.status(200).send(req.body.emailSent);
 });
 
@@ -911,6 +924,10 @@ router.post("/getAllNewMessages", Positive.getAllNewMessages, (req, res) => {
 
 router.post("/getAllMessages", Positive.getAllMessages, (req, res) => {
   res.status(200).send(req.body.messages);
+});
+
+router.post("/setAsSeen", Positive.setAsSeen, (req, res) => {
+  res.status(200).send(req.body.seen);
 });
 
 router.post("/getValidProof", Positive.getValidProof, (req, res) => {

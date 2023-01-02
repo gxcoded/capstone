@@ -29,7 +29,7 @@ exports.searchContacts = async (req, res, callback) => {
     .populate("room")
     .populate("scannedBy")
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       req.body.contacts = result;
       // result.forEach((r) => {
       //   Number(r.date) >= Number(range) && data.push(r);
@@ -74,7 +74,7 @@ exports.possibleInteractions = async (req, res, callback) => {
 exports.wideRangeInteractions = async (req, res, callback) => {
   // const limit = date + 86400000;
 
-  console.log(req.body);
+  // console.log(req.body);
 
   const starting = Number(req.body.starting);
   const ending = Number(req.body.ending);

@@ -31,7 +31,7 @@ exports.getMyNotifications = async (req, res, callback) => {
 
   // console.log(account);
   await Notification.find({ account })
-    .sort("dateSent")
+    .sort({ dateSent: -1 })
     .then((result) => {
       req.body.notifications = result;
     })

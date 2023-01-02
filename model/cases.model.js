@@ -11,8 +11,7 @@ const caseSchema = new Schema({
   report: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "positives",
-    required: true,
-    trim: true,
+    default: null,
   },
   dateTraced: {
     type: String,
@@ -28,6 +27,15 @@ const caseSchema = new Schema({
     type: String,
     default: null,
     trim: true,
+  },
+  dateNotified: {
+    type: String,
+    default: null,
+    trim: true,
+  },
+  seen: {
+    type: Boolean,
+    default: false,
   },
 });
 

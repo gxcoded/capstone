@@ -130,6 +130,22 @@ exports.getAllNewMessages = async (req, res, callback) => {
   await callback();
 };
 
+exports.setAsSeen = async (req, res, callback) => {
+  const _id = req.body.id;
+
+  await Positive.findOneAndUpdate({ _id }, { $set: { seen: true } })
+    .then((result) => {
+      console.log(result);
+      req.body.seen = true;
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.seen = false;
+    });
+
+  await callback();
+};
+
 exports.getAllMessages = async (req, res, callback) => {
   const campus = req.body.campus;
 

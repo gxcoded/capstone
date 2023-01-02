@@ -41,7 +41,7 @@ const positiveSchema = new mongoose.Schema({
   },
   message: {
     type: String,
-    required: true,
+    default: "None",
     trim: true,
   },
   seen: {

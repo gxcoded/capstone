@@ -229,7 +229,7 @@ exports.statusChecker = async (req, res, callback) => {
 
   await Account.findOne({ _id, allowed: true })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       result !== null && (req.body.allowed = true);
     })
     .catch((err) => {

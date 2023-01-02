@@ -62,7 +62,7 @@ exports.getClasses = async (req, res, callback) => {
     .populate("subject")
     .populate("icon")
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       if (result.length > 0) {
         req.body.classList = result;
       } else {

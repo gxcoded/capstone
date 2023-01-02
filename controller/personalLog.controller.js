@@ -236,14 +236,21 @@ const logLastOut = async (id) => {
 };
 
 exports.getLastLog = async (req, res, callback) => {
+  console.log("id" + req.body.id);
   const id = req.body.id;
   const ll = await lastLog(id);
   const pl = await lastPersonalLog(id);
 
-  if (Number(ll) > pl) {
-    req.body.lastLog = ll;
+  if (Number(ll) > Number(pl)) {
+    console.log("first");
+    console.log(ll);
+    console.log(pl);
+    req.body.lastLog = `${ll}`;
   } else {
-    req.body.lastLog = pl;
+    console.log("second");
+    console.log(ll);
+    console.log(pl);
+    req.body.lastLog = `${pl}`;
   }
 
   await callback();
@@ -261,13 +268,13 @@ exports.lastLogTester = async (req, res, callback) => {
 };
 
 const lastPersonalLog = async (id) => {
-  let last = Date.now().toString();
+  let last = 0;
 
   await PersonalLog.findOne({ accountOwner: id })
     .sort({ date: -1 })
     .then((result) => {
       if (result !== null) {
-        last = result.date;
+        last = Number(result.date);
       }
     })
     .catch((err) => {});
@@ -275,12 +282,13 @@ const lastPersonalLog = async (id) => {
 };
 
 const lastLog = async (id) => {
-  let last = Date.now().toString();
+  let last = 0;
+
   await Logs.findOne({ accountScanned: id })
     .sort({ date: -1 })
     .then((result) => {
       if (result !== null) {
-        last = result.date;
+        last = Number(result.date);
       }
     })
     .catch((err) => {});
