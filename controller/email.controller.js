@@ -53,6 +53,7 @@ exports.sendResetLink = async (req, res, callback) => {
 
     const account = body._id;
     const email = body.email;
+    const idNumber = body.idNumber;
     const firstName = body.firstName;
     const lastName = body.lastName;
     const dateSent = Date.now();
@@ -60,6 +61,7 @@ exports.sendResetLink = async (req, res, callback) => {
     const emailProps = {
       account,
       hash,
+      idNumber,
       firstName,
       lastName,
       email,
@@ -76,6 +78,7 @@ exports.sendResetLink = async (req, res, callback) => {
         req.body.sent = true;
       })
       .catch((err) => {
+        console.log(err);
         req.body.sent = false;
       });
   } else {
