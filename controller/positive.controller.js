@@ -99,6 +99,43 @@ exports.getSentMessages = async (req, res, callback) => {
   await callback();
 };
 
+exports.setAsInvalid = async (req, res, callback) => {
+  const _id = req.body.id;
+  const accountOwner = req.body.accountOwner;
+  const now = Date.now().toString();
+
+  await Account.updateOne({ _id: accountOwner }, { $set: { allowed: true } })
+    .then((update) => {
+      req.body.updated = true;
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.updated = false;
+    });
+
+  await Positive.updateOne(
+    { _id },
+    { $set: { isStillValid: false, invalidDate: now } }
+  )
+    .then((update) => {
+      req.body.updated = true;
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.updated = false;
+    });
+
+  await Case.updateOne({ report: _id }, { $set: { isValid: false } })
+    .then((update) => {
+      req.body.updated = true;
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.updated = false;
+    });
+  await callback();
+};
+
 exports.countNewMessage = async (req, res, callback) => {
   const campus = req.body.campus;
 
@@ -149,7 +186,23 @@ exports.setAsSeen = async (req, res, callback) => {
 exports.getAllMessages = async (req, res, callback) => {
   const campus = req.body.campus;
 
-  await Positive.find({ campus })
+  await Positive.find({ campus, isStillValid: true })
+    .sort({ dateSent: -1 })
+    .populate("accountOwner")
+    .then((msgs) => {
+      req.body.messages = msgs;
+    })
+    .catch((err) => {
+      req.body.messages = [];
+    });
+
+  await callback();
+};
+
+exports.getInvalidReports = async (req, res, callback) => {
+  const campus = req.body.campus;
+
+  await Positive.find({ campus, isStillValid: false })
     .sort({ dateSent: -1 })
     .populate("accountOwner")
     .then((msgs) => {

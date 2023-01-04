@@ -35,7 +35,7 @@ exports.checkUntracedCase = async (req, res, callback) => {
 exports.getAllUntracedCase = async (req, res, callback) => {
   const campus = req.body.campus;
 
-  await Cases.find({ campus, dateTraced: null })
+  await Cases.find({ campus, dateTraced: null, isValid: true })
     .then((result) => {
       // console.log(result);
       req.body.cases = result;
@@ -113,8 +113,10 @@ exports.setAsNotified = async (req, res, callback) => {
 };
 
 exports.caseUpdater = async (req, res, callback) => {
+  console.log(req.body);
   // console.log(req.body);
   let dateTraced = null;
+  let dateNotified = null;
   req.body.updated = false;
 
   const report = req.body.id;
@@ -122,10 +124,14 @@ exports.caseUpdater = async (req, res, callback) => {
 
   if (isSet) {
     dateTraced = Date.now().toString();
+    dateNotified = Date.now().toString();
     // console.log(dateTraced);
   }
 
-  await Cases.updateOne({ report }, { $set: { dateTraced: dateTraced } })
+  await Cases.updateOne(
+    { report },
+    { $set: { dateTraced: dateTraced, dateNotified: dateNotified } }
+  )
     .then((updated) => {
       // console.log(updated);
       req.body.updated = true;

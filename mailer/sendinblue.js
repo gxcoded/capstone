@@ -1,8 +1,9 @@
 const Sib = require("sib-api-v3-sdk");
 const client = Sib.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
-apiKey.apiKey =
-  "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";
+require("dotenv").config();
+
+apiKey.apiKey = process.env.SENDIN_BLUE_API;
 const transEmailApi = new Sib.TransactionalEmailsApi();
 const sender = {
   email: "gcodedecrypt@gmail.com",

@@ -926,12 +926,20 @@ router.post("/getAllMessages", Positive.getAllMessages, (req, res) => {
   res.status(200).send(req.body.messages);
 });
 
+router.post("/getInvalidReports", Positive.getInvalidReports, (req, res) => {
+  res.status(200).send(req.body.messages);
+});
+
 router.post("/setAsSeen", Positive.setAsSeen, (req, res) => {
   res.status(200).send(req.body.seen);
 });
 
 router.post("/getValidProof", Positive.getValidProof, (req, res) => {
   res.status(200).send(req.body.result);
+});
+
+router.post("/setAsInvalid", Positive.setAsInvalid, (req, res) => {
+  res.status(200).send(req.body.updated);
 });
 
 router.post(

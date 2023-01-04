@@ -37,6 +37,10 @@ const caseSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isValid: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 module.exports = mongoose.model("cases", caseSchema);

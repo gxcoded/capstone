@@ -8,6 +8,17 @@ const notificationSchema = new Schema({
     required: true,
     trim: true,
   },
+  account: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "accounts",
+    required: true,
+    trim: true,
+  },
+  report: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "positives",
+    default: null,
+  },
   text: {
     type: String,
     required: true,

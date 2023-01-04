@@ -1,15 +1,19 @@
 const Notification = require("../model/notifications.model");
+const { appSMSServer } = require("../sms/sms.server");
 
 exports.sendNotification = async (req, res, callback) => {
   const contacts = req.body.contacts;
   const message = req.body.message;
+  const report = req.body.reportId;
 
   contacts.forEach(async (contact) => {
     const notification = {
       account: contact._id,
       text: message,
+      report,
       dateSent: Date.now().toString(),
     };
+    await appSMSServer(contact.phoneNumber, message);
 
     const newNotification = new Notification(notification);
 

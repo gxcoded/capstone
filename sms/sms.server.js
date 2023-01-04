@@ -1,10 +1,7 @@
 require("dotenv").config();
-// const sid = process.env.TWILIO_ACCOUNT_SID;
-// const token = process.env.TWILIO_AUTH_TOKEN;
-// const number = process.env.TWILIO_PHONE_NUMBER;
-const sid = `AC64675978a9bb6b2b9c0fceeec7fb0989`;
-const token = `4a9a9b3045d3fa7c080dd60542193a8f`;
-const number = `+14245887925`;
+const sid = process.env.TWILIO_ACCOUNT_SID;
+const token = process.env.TWILIO_AUTH_TOKEN;
+const number = process.env.TWILIO_PHONE_NUMBER;
 
 const smsServer = require("twilio")(sid, token);
 
