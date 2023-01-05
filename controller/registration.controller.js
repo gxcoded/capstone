@@ -38,6 +38,32 @@ exports.checkId = async (req, res, callback) => {
   await callback();
 };
 
+exports.getTempDetails = async (req, res, callback) => {
+  const tempId = req.body.tempId;
+
+  await Temp.find({ tempId })
+    .then((result) => {
+      req.body.result = result;
+    })
+    .catch((err) => {
+      console.log(err);
+      req.body.result = [];
+    });
+
+  await callback();
+};
+
+exports.resendCode = async (req, res, callback) => {
+  const code = req.body.code;
+  const phoneNumber = req.body.phoneNumber;
+
+  const textMessage = `${code} is your PSU Contact Tracer Verification Code`;
+
+  req.body.sent = await appSMSServer(phoneNumber, textMessage);
+
+  await callback();
+};
+
 exports.temp = async (image, body, tempId) => {
   const number = await getQueueNumber();
   const role = body.role;
