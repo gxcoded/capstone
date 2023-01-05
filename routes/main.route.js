@@ -50,6 +50,8 @@ const {
 } = require("../controller/yearLevel.controller");
 const {
   temp,
+  getTempDetails,
+  resendCode,
   walkInReg,
   findTemp,
   getTemp,
@@ -853,6 +855,14 @@ router.post("/preRegister", upload.single("file"), async (req, res) => {
   res.status(200).send(tempId);
 });
 
+router.post("/getTempDetails", getTempDetails, async (req, res) => {
+  res.status(200).send(req.body.result);
+});
+
+router.post("/resendCode", resendCode, async (req, res) => {
+  res.status(200).send(req.body.sent);
+});
+
 router.post("/staffRegister", upload.single("file"), async (req, res) => {
   staffAccount(req.file.filename, req.body);
   res.status(200).send(true);
@@ -873,6 +883,11 @@ router.post("/reportPositive", upload.single("file"), async (req, res) => {
   res.status(200).send(true);
 });
 
+router.post("/manualPositive", upload.single("file"), async (req, res) => {
+  Positive.manualPositive(req.file.filename, req.body);
+  res.status(200).send(true);
+});
+
 // router.post("/reportNegative", Negative.reportNegative, async (req, res) => {
 //   console.log(req.body);
 //   console.log(req.file);
@@ -882,6 +897,11 @@ router.post("/reportPositive", upload.single("file"), async (req, res) => {
 // ============Negative Reports==============
 router.post("/reportNegative", upload.single("file"), async (req, res) => {
   const success = await Negative.reportNegative(req.file.filename, req.body);
+  res.status(200).send(success);
+});
+
+router.post("/manualNegative", upload.single("file"), async (req, res) => {
+  const success = await Negative.manualNegative(req.file.filename, req.body);
   res.status(200).send(success);
 });
 
