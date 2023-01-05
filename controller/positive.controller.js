@@ -5,6 +5,61 @@ const Restrict = require("../model/restricted.model");
 const { appSMSServer } = require("../sms/sms.server");
 const { notificationServer } = require("./notifications.controller");
 
+exports.manualPositive = async (image, body) => {
+  const newMessage = {
+    campus: body.campus,
+    accountOwner: body.accountOwner,
+    dateTested: body.dateTested,
+    testType: body.testType,
+    dateSent: body.dateSent,
+    resultDate: body.resultDate,
+    imgProof: image,
+    message: body.message,
+  };
+  const newPositive = new Positive(newMessage);
+
+  await newPositive
+    .save()
+    .then(async (temp) => {
+      const newCase = {
+        campus: temp.campus,
+        report: temp._id,
+      };
+
+      const anotherCase = new Case(newCase);
+
+      await anotherCase
+        .save()
+        .then(async (cs) => {
+          const restrict = {
+            caseId: cs._id,
+            account: body.accountOwner,
+          };
+
+          const newRestrict = new Restrict(restrict);
+
+          await newRestrict
+            .save()
+            .then((rs) => {
+              console.log("Restricted");
+            })
+            .catch((err) => {
+              console.log("restricted Error " + err);
+            });
+        })
+        .catch((err) => {
+          console.log("Case Error " + err);
+        });
+      if (await updateStatus(body.accountOwner)) {
+        console.log(temp._id);
+        console.log("Sent");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 exports.notificationMessages = async (image, body) => {
   const text = `Someone reported positive of COVID-19, please check your PSU contact tracer account!`;
   const msg = `There is a new Reported Case of COVID-19`;
