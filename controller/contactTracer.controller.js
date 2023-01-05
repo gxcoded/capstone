@@ -90,12 +90,12 @@ exports.wideRangeInteractions = async (req, res, callback) => {
     .then((result) => {
       // console.log(result);
 
-      result.forEach((data) => {
-        if (Number(data.date) >= ending && Number(data.date) <= starting) {
-          array.push(data);
-        }
-      });
-      req.body.result = array;
+      // result.forEach((data) => {
+      //   if (Number(data.date) >= ending && Number(data.date) <= starting) {
+      //     array.push(data);
+      //   }
+      // });
+      req.body.result = result;
     })
     .catch((err) => {
       req.body.result = array;
